@@ -1,0 +1,18 @@
+CXX = mpic++
+CXXFLAGS = -cxx=hipcc -lhipblas -lrocblas -lmpi -O3 --offload-arch=gfx90a -Iinclude -I/opt/rocm/include/hipblas -I/opt/rocm/include/rocblas -DBLOCK_SIZE=256 -DNUM_STREAMS=1	
+EXE_NAME = mpi-tensor-episdet_mi250x
+SOURCES = src/helper.hip src/mpi-tensor-episdet.hip
+BINDIR = bin
+
+
+triplets_k2:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) src/search-triplets.hip $(CXXFLAGS) -DTRIPLETS -o $(BINDIR)/$(EXE_NAME).triplets.k2.bin
+
+triplets_mi:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) src/search-triplets.hip $(CXXFLAGS) -DTRIPLETS -DMI_SCORE -o $(BINDIR)/$(EXE_NAME).triplets.mi.bin
+
+clean: 
+	rm -rf $(BINDIR)/$(EXE_NAME)
+

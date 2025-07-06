@@ -1,0 +1,42 @@
+CXX = nvcc
+CXXFLAGS = --default-stream per-thread -O3 -lineinfo -Xcompiler -Icutlass-3.4.1/include -Icutlass-3.4.1/tools/util/include -Iinclude -lmpi 
+EXE_NAME = mpi-epi4tensor_a100
+SOURCES = src/cutlass-op.cu src/epistasis.cu src/mpi-epi4tensor.cu
+BINDIR = bin
+
+
+sm89_and:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) $(CXXFLAGS) -arch=sm_89 -DAMPERE_86_AND -Xcompiler -fopenmp -o $(BINDIR)/$(EXE_NAME)
+
+
+sm89_xor:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) $(CXXFLAGS) -arch=sm_89 -DAMPERE_86_XOR -Xcompiler -fopenmp -o $(BINDIR)/$(EXE_NAME)
+
+
+sm86_and:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) $(CXXFLAGS) -arch=sm_86 -DAMPERE_86_AND -Xcompiler -fopenmp -o $(BINDIR)/$(EXE_NAME)
+	
+
+sm86_xor:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) $(CXXFLAGS) -arch=sm_86 -DAMPERE_86_XOR -Xcompiler -fopenmp -o $(BINDIR)/$(EXE_NAME)
+
+sm80_and:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) $(CXXFLAGS) -arch=sm_80 -DAMPERE_80_AND -Xcompiler -fopenmp -o $(BINDIR)/$(EXE_NAME)
+
+sm80_xor:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) $(CXXFLAGS) -arch=sm_80 -DAMPERE_80_XOR -Xcompiler -fopenmp -o $(BINDIR)/$(EXE_NAME)
+
+
+sm75:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) $(CXXFLAGS) -arch=sm_75 -Xcompiler -fopenmp -o $(BINDIR)/$(EXE_NAME)
+
+clean: 
+	rm -rf $(BINDIR)/$(EXE_NAME)
+

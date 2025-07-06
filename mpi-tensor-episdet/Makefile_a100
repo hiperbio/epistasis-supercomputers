@@ -1,0 +1,18 @@
+CXX = nvcc
+CXXFLAGS = --default-stream per-thread -O3 -arch=sm_80 -lineinfo -Xcompiler -Icutlass-1.3.3 -Iinclude -DCUTLASS_USE_INT_WMMA -DCUTLASS_USE_SUBBYTE_WMMA -DBLOCK_SIZE=256 -DNUM_STREAMS=8 -g -lmpi
+EXE_NAME = mpi-tensor-episdet_a100
+SOURCES = src/helper.cu src/mpi-tensor-episdet.cu
+BINDIR = bin
+
+
+triplets_k2:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) src/search-triplets.cu $(CXXFLAGS) -DTRIPLETS -o $(BINDIR)/$(EXE_NAME).triplets.k2.bin
+
+triplets_mi:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) src/search-triplets.cu $(CXXFLAGS) -DTRIPLETS -DMI_SCORE -o $(BINDIR)/$(EXE_NAME).triplets.mi.bin
+
+clean: 
+	rm -rf $(BINDIR)/$(EXE_NAME)
+

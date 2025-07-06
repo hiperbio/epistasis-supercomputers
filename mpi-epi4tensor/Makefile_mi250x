@@ -1,0 +1,14 @@
+CXX = mpic++
+CXXFLAGS = -cxx=hipcc -O3 -Iinclude -lhipblas -lrocblas -lmpi -I/opt/rocm/include/hipblas -I/opt/rocm/include/rocblas	
+EXE_NAME = mpi-epi4tensor_mi250x
+SOURCES = src/epistasis.hip src/mpi-epi4tensor.hip
+BINDIR = bin
+
+
+lumi:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(SOURCES) $(CXXFLAGS) --offload-arch=gfx90a -o $(BINDIR)/$(EXE_NAME)
+
+clean: 
+	rm -rf $(BINDIR)/$(EXE_NAME)
+

@@ -1,0 +1,17 @@
+CXX = nvcc
+CXXFLAGS = -I gsl/include -L gsl/lib -lgsl -lgslcblas -lmpi -lcuda -O3 -DNUM_CPU_THREADS=7 -o 
+LDFLAGS = -O3 -arch=sm_80 -Xcompiler -fopenmp	
+EXE_NAME = mpi-episdet_a100
+SOURCES = src/mpi-epistasis.cu
+BINDIR = bin
+
+all: main
+
+main:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(CXXFLAGS) $(BINDIR)/$(EXE_NAME) $(SOURCES) $(LDFLAGS)
+
+
+clean: 
+	rm -rf $(BINDIR)/$(EXE_NAME)
+

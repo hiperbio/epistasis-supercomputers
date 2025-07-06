@@ -1,0 +1,17 @@
+CXX = hipcc
+CXXFLAGS = -I gsl/include -L gsl/lib -I /opt/cray/pe/mpich/8.1.23/ucx/cray/10.0/include -L /opt/cray/pe/mpich/8.1.23/ucx/cray/10.0/lib/ -lgsl -lgslcblas -lmpi -O3 -DNUM_CPU_THREADS=7 -o 
+LDFLAGS = -O3 --amdgpu-target=gfx90a -fopenmp	
+EXE_NAME = mpi-episdet_mi250x
+SOURCES = src/mpi-epistasis.hip
+BINDIR = bin
+
+all: main
+
+main:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(CXXFLAGS) $(BINDIR)/$(EXE_NAME) $(SOURCES) $(LDFLAGS)
+
+
+clean: 
+	rm -rf $(BINDIR)/$(EXE_NAME)
+

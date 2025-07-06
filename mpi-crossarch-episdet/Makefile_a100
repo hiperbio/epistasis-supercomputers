@@ -1,0 +1,16 @@
+CXX = mpiicpx
+CXXFLAGS = -I gsl/include -L gsl/lib -O3 -DNUM_CPU_THREADS=7 -o                                    
+LDFLAGS = -lgsl -lgslcblas -fiopenmp -fsycl -fsycl-targets=nvptx64-nvidia-cuda -Xsycl-target-backend --offload-arch=sm_80 -Xcuda-ptxas -dlcm=ca
+EXE_NAME = mpi-crossarch-episdet_a100
+SOURCES = src/mpi-epistasis.dp.cpp
+BINDIR = bin
+
+all: main
+
+main:
+	[ -d $(BINDIR) ] || mkdir $(BINDIR)
+	$(CXX) $(CXXFLAGS) $(BINDIR)/$(EXE_NAME) $(SOURCES) $(LDFLAGS)
+
+clean: 
+	rm -rf $(BINDIR)/$(EXE_NAME)
+
